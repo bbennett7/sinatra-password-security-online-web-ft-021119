@@ -56,7 +56,7 @@ account –– still possible, but more difficult.
 
 ### Implementing BCrypt
 
-We've created a migration file for you, but you'll need to fill it in. For now,
+<!-- We've created a migration file for you, but you'll need to fill it in. For now,
 we'll use `def up` and `def down` methods for this lab, but note that you will
 often see `def change` now when generating migrations. Let's edit that file so
 that it actually creates a `users` table. We'll have two columns: one for
@@ -74,20 +74,20 @@ class CreateUsers < ActiveRecord::Migration[5.1]
   def down
     drop_table :users
   end
-end
-```
+end -->
+<!-- ```
 
 Run this migration using `rake db:migrate`. Preview your work by running
 `shotgun` and navigating to [localhost:9393](http://localhost:9393/) in your
-browser. Awesome job!
+browser. Awesome job! -->
 
-**_NOTE_**: If you're in the Learn IDE, instead of going to
+<!-- **_NOTE_**: If you're in the Learn IDE, instead of going to
 [localhost:9393](http://localhost:9393/) you'll navigate to the URL output by
-the `shotgun` command.
+the `shotgun` command. -->
 
 ### ActiveRecord's `has_secure_password`
 
-Next, let's update our user model so that it includes `has_secure_password`.
+<!-- Next, let's update our user model so that it includes `has_secure_password`.
 This ActiveRecord macro gives us access to a few new methods. A macro is a
 method that when called, creates methods for you. This is meta programming,
 which you don't need to worry about now. Just know that using a macro is just
@@ -102,9 +102,9 @@ plain text password in the database.
 class User < ActiveRecord::Base
   has_secure_password
 end
-```
+``` -->
 
-Next, let's handle signing up. In our `post '/signup'` action, let's make a new
+<!-- Next, let's handle signing up. In our `post '/signup'` action, let's make a new
 instance of our user class with a username and password from params. Note that
 even though our database has a column called `password_digest`, we still access
 the attribute of `password`. This is given to us by `has_secure_password`. You
@@ -113,10 +113,10 @@ can read more about that in the [Ruby Docs](http://api.rubyonrails.org/classes/A
 ```ruby
 post "/signup" do
   user = User.new(:username => params[:username], :password => params[:password])
-end
-```
+end -->
+<!-- ``` -->
 
-Because our user has `has_secure_password`, we won't be able to save this to
+<!-- Because our user has `has_secure_password`, we won't be able to save this to
 the database unless our user filled out the password field. Calling `user.save`
 will return false if the user can't be persisted. Let's update this route so
 that we redirect to `'/login'` if the user is saved, or `'/failure'` if the
@@ -133,9 +133,9 @@ post "/signup" do
     redirect "/failure"
   end
 end
-```
+``` -->
 
-Awesome! Test this feature out in your browser. Leaving the password field
+<!-- Awesome! Test this feature out in your browser. Leaving the password field
 blank should land you at the "failure" page, while creating a valid user should
 take you to login.
 
@@ -145,10 +145,10 @@ Next, create at least one valid user, then let's build out our login action. In
 ```ruby
 post "/login" do
   user = User.find_by(:username => params[:username])
-end
-```
+end -->
+<!-- ``` -->
 
-Next, we need to check two conditions: first, did we find a user with that
+<!-- Next, we need to check two conditions: first, did we find a user with that
 username? This can be written as `user != nil` or simply `user`.
 
 ```ruby
@@ -160,9 +160,9 @@ post "/login" do
     redirect "/failure"
   end
 end
-```
+``` -->
 
-We also need to check if that user's password matches up with the value in
+<!-- We also need to check if that user's password matches up with the value in
 `password_digest`. Users must have both an account _and_ know the password.
 
 We validate password match by using a method called `authenticate` on our
@@ -176,7 +176,7 @@ end
 ```
 
 we told Ruby to add an `authenticate` method to our class (invisibly!) when the
-program runs. While we, as programmers can't see it, **it will be there**.
+program runs. While we, as programmers can't see it, **it will be there**. -->
 
 > **ASIDE** This is one of the special powers of Ruby called
 > "_metaprogramming_:" writing code that writes code.  Ruby code can run
@@ -190,18 +190,18 @@ program runs. While we, as programmers can't see it, **it will be there**.
 > whether to use metaprogramming. Understanding metaprogramming perfectly  is
 > _not_ essential to being a Ruby or Rails developer.
 
-Let's step through the process of how `User`'s `authenticate` method works. It:
+<!-- Let's step through the process of how `User`'s `authenticate` method works. It:
 
 1. Takes a `String` as an argument e.g. `i_luv@byron_poodle_darling`
 2. It turns the `String` into a salted, hashed version (`76776516e058d2bf187213df6917a7e`)
 3. It compares this salted, hashed version with the user's stored salted,
    hashed password in the database
 4. If the two versions match, `authenticate` will return the `User` instance;
-   if not, it returns `false`
+   if not, it returns `false` -->
 
 > **IMPORTANT** At no point do we look at an unencrypted version of the user's
 > password.
-
+<!--
 In the code below, we see how we can ensure that we have a `User` AND that that
 `User` is authenticated. If the user authenticates, we'll set the
 `session[:user_id]` and redirect to the `/success` route. Otherwise, we'll
@@ -218,7 +218,7 @@ post "/login" do
     redirect "/failure"
   end
 end
-```
+``` -->
 
 Awesome job! We've now built out a basic authentication system for a user
 without storing a plain-text password in our database.
